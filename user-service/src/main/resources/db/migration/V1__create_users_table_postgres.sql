@@ -1,4 +1,3 @@
--- V1__create_users_table.sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE users (

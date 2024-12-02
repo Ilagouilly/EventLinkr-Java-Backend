@@ -1,18 +1,32 @@
-# src/main/resources/application.yml
 spring:
   application:
     name: user-service
 
+  profiles:
+    active: local
+
+  # H2 Database Configuration
+  datasource:
+    url: jdbc:h2:mem:eventlinkr
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/eventlinkr
-    username: eventlinkr
-    password: eventlinkr_password
+    url: r2dbc:h2:mem:///eventlinkr?options=DB_CLOSE_DELAY=-1
+    username: sa
+    password: 
+
+  h2:
+    console:
+      enabled: true
 
   flyway:
-    url: jdbc:postgresql://localhost:5432/eventlinkr
-    user: eventlinkr
-    password: eventlinkr_password
-    locations: classpath:db/migration
+    url: jdbc:h2:mem:eventlinkr
+    user: sa
+    password: 
+    locations: 
+      - classpath:db/migration/{vendor}
 
   security:
     oauth2:
