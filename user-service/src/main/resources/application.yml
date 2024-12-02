@@ -1,0 +1,39 @@
+# src/main/resources/application.yml
+spring:
+  application:
+    name: user-service
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/eventlinkr
+    username: eventlinkr
+    password: eventlinkr_password
+
+  flyway:
+    url: jdbc:postgresql://localhost:5432/eventlinkr
+    user: eventlinkr
+    password: eventlinkr_password
+    locations: classpath:db/migration
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://your-keycloak-server/realms/eventlinkr
+
+# Actuator Endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.r2dbc: DEBUG
