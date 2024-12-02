@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: user-service
+
+  profiles:
+    active: local
+
+  # H2 Database Configuration
+  datasource:
+    url: jdbc:h2:mem:eventlinkr
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+
+  r2dbc:
+    url: r2dbc:h2:mem:///eventlinkr?options=DB_CLOSE_DELAY=-1
+    username: sa
+    password: 
+
+  h2:
+    console:
+      enabled: true
+
+  flyway:
+    url: jdbc:h2:mem:eventlinkr
+    user: sa
+    password: 
+    locations: 
+      - classpath:db/migration/{vendor}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://your-keycloak-server/realms/eventlinkr
+  server:
+  port: 8080
+
+# Actuator Endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.r2dbc: DEBUG
