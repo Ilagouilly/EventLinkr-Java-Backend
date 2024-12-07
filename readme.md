@@ -4,20 +4,17 @@
 
 EventLinkr is an innovative event management platform designed to transform networking experiences by leveraging cutting-edge technology and intelligent connection recommendations.
 
-### 🚀 Value Proposition
-
-Traditional event networking is often inefficient and unstructured. EventLinkr solves this by providing:
-- Intelligent connection recommendations
-- Seamless QR code-based check-in
-- Advanced attendee matching algorithms
-- Professional networking optimization
-
 ## 🛠 Tech Stack
 
 ### Backend Technologies
 ![Java](https://img.shields.io/badge/Java-21-red?style=for-the-badge&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green?style=for-the-badge&logo=springboot)
 ![Reactive](https://img.shields.io/badge/Reactive-WebFlux-blue?style=for-the-badge)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![GraphQL](https://img.shields.io/badge/-GraphQL-E10098?style=for-the-badge&logo=graphql&logoColor=white)
+![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-000?style=for-the-badge&logo=apachekafka)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
 ### Architecture
 - Microservices Architecture
@@ -72,13 +69,6 @@ Traditional event networking is often inefficient and unstructured. EventLinkr s
    docker-compose up --build
    ```
 
-## 🧪 Testing Strategy
-
-- Comprehensive Unit Tests
-- Integration Tests with Testcontainers
-- Reactive Programming Test Coverage
-- Aim: 80%+ Test Coverage
-
 ## 🔒 Security Features
 
 - JWT Token-Based Authentication
@@ -86,37 +76,19 @@ Traditional event networking is often inefficient and unstructured. EventLinkr s
 - Role-Based Access Control
 - Secure Microservices Communication
 
-## 🌐 Deployment
-
-- Containerization: Docker
-- Orchestration: Kubernetes
-- Cloud Provider: AWS EKS
-- CI/CD: GitHub Actions
-
-## 📈 Roadmap
-
-- [ ] LinkedIn Authentication Integration
-- [ ] Advanced Networking Recommendation Engine
-- [ ] Mobile Application
-- [ ] Enterprise Event Management Features
-
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/NetworkingInnovation`)
 3. Commit your changes (`git commit -m 'Add intelligent matching algorithm'`)
-4. Push to the branch (`git push origin feature/NetworkingInnovation`)
+4. Push to the branch (`git push origin dev/NetworkingInnovation`)
 5. Open a Pull Request
 
 ## 📄 License
 
+[![Licence](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)](./LICENSE)
+
 Distributed under the MIT License. See `LICENSE` for more information.
-
-## 📞 Contact
-
-Your Name - your.email@example.com
-
-Project Link: [https://github.com/ilagouilly/eventlinkr-backend](https://github.com/ilagouilly/eventlinkr-backend)
 
 ---
 
