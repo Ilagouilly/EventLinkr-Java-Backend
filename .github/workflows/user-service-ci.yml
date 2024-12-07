@@ -1,13 +1,13 @@
-name: User Service CI/CD
+name: EventLinkr CI/CD
 
 on:
   push:
-    branches: [ main, infra ]
+    branches: [ main, infra, dev ]
     paths:
       - 'user-service/**'
       - '.github/workflows/user-service-ci.yml'
   pull_request:
-    branches: [ main, infra ]
+    branches: [ main, infra, dev ]
     paths:
       - 'user-service/**'
       - '.github/workflows/user-service-ci.yml'
