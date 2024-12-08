@@ -4,9 +4,10 @@
 
 EventLinkr is an innovative event management platform designed to transform networking experiences by leveraging cutting-edge technology and intelligent connection recommendations.
 
+![version](https://img.shields.io/badge/version-0.0.1-blue)  ![Build Status](https://img.shields.io/github/actions/workflow/status/ilagouilly/EventLinkr-Java-Backend/.github/workflows/user-service-ci.yml)  [![CodeFactor](https://www.codefactor.io/repository/github/ilagouilly/eventlinkr-java-backend/badge/main)](https://www.codefactor.io/repository/github/ilagouilly/eventlinkr-java-backend/overview/main)  ![Coverage](https://codecov.io/gh/ilagouilly/EventLinkr-Java-Backend/branch/main/graph/badge.svg)  ![Issues](https://img.shields.io/github/issues/ilagouilly/EventLinkr-Java-Backend)  ![Pull Requests](https://img.shields.io/github/issues-pr/ilagouilly/EventLinkr-Java-Backend)  
+
 ## 🛠 Tech Stack
 
-### Backend Technologies
 ![Java](https://img.shields.io/badge/Java-21-red?style=for-the-badge&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green?style=for-the-badge&logo=springboot)
 ![Reactive](https://img.shields.io/badge/Reactive-WebFlux-blue?style=for-the-badge)
@@ -25,7 +26,7 @@ EventLinkr is an innovative event management platform designed to transform netw
 ## 🔧 Key Technologies
 
 - **Language**: Java 21
-- **Framework**: Spring Boot 3.x
+- **Framework**: Spring Boot 3.4.0
 - **Reactive Programming**: Spring WebFlux
 - **Database**: PostgreSQL
 - **ORM**: Spring Data R2DBC
@@ -55,8 +56,8 @@ EventLinkr is an innovative event management platform designed to transform netw
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/[YOUR_USERNAME]/eventlinkr-backend.git
-   cd eventlinkr-backend
+   git clone https://github.com/ilagouilly/EventLinkr-Java-Backend.git
+   cd EventLinkr-Java-Backend
    ```
 
 2. Build the project
@@ -78,6 +79,8 @@ EventLinkr is an innovative event management platform designed to transform netw
 
 ## 🤝 Contributing
 
+![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?style=for-the-badge&logo=github)  
+
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/NetworkingInnovation`)
 3. Commit your changes (`git commit -m 'Add intelligent matching algorithm'`)
@@ -92,4 +95,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-**Built with ❤️ and ☕ by the EventLinkr Team**
+**Built with ❤️ and ☕ by ilagouilly**
