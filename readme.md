@@ -94,5 +94,3 @@ EventLinkr is an innovative event management platform designed to transform netw
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-
-**Built with ❤️ and ☕ by ilagouilly**
