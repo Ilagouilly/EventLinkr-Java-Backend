@@ -1,5 +1,5 @@
 # Use official OpenJDK image
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:23-jdk-alpine
 
 # Install Maven
 RUN apk add --no-cache maven
