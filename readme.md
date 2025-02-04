@@ -1,4 +1,5 @@
 # EventLinkr: Revolutionizing Event Networking
+# EventLinkr: Revolutionizing Event Networking
 
 ## 🌟 Project Overview
 
@@ -8,7 +9,7 @@ EventLinkr is an innovative event management platform designed to transform netw
 
 ## 🛠 Tech Stack
 
-![Java](https://img.shields.io/badge/Java-21-red?style=for-the-badge&logo=java)
+![Java](https://img.shields.io/badge/Java-23-red?style=for-the-badge&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green?style=for-the-badge&logo=springboot)
 ![Reactive](https://img.shields.io/badge/Reactive-WebFlux-blue?style=for-the-badge)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
@@ -25,7 +26,7 @@ EventLinkr is an innovative event management platform designed to transform netw
 
 ## 🔧 Key Technologies
 
-- **Language**: Java 21
+- **Language**: Java 23
 - **Framework**: Spring Boot 3.4.0
 - **Reactive Programming**: Spring WebFlux
 - **Database**: PostgreSQL
@@ -48,7 +49,7 @@ EventLinkr is an innovative event management platform designed to transform netw
 
 ### Prerequisites
 
-- Java 21 JDK
+- Java 23 JDK
 - Docker
 - Docker Compose
 
@@ -94,5 +95,3 @@ EventLinkr is an innovative event management platform designed to transform netw
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-
-**Built with ❤️ and ☕ by ilagouilly**
