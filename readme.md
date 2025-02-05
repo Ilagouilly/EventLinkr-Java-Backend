@@ -1,5 +1,4 @@
 # EventLinkr: Revolutionizing Event Networking
-# EventLinkr: Revolutionizing Event Networking
 
 ## 🌟 Project Overview
 
