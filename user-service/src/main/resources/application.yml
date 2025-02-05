@@ -27,6 +27,7 @@ spring:
     password: 
     locations: 
       - classpath:db/migration/{vendor}
+    baseline-on-migrate: true
 
   security:
     oauth2:
