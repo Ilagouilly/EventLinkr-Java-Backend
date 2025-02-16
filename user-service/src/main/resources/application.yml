@@ -10,12 +10,12 @@ spring:
     url: jdbc:h2:mem:eventlinkr
     driverClassName: org.h2.Driver
     username: sa
-    password: 
+    password:
 
   r2dbc:
     url: r2dbc:h2:mem:///eventlinkr?options=DB_CLOSE_DELAY=-1
     username: sa
-    password: 
+    password:
 
   h2:
     console:
@@ -24,8 +24,8 @@ spring:
   flyway:
     url: jdbc:h2:mem:eventlinkr
     user: sa
-    password: 
-    locations: 
+    password:
+    locations:
       - classpath:db/migration/{vendor}
     baseline-on-migrate: true
 

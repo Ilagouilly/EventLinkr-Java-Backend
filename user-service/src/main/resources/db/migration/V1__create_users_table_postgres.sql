@@ -1,6 +1,6 @@
 -- Create users table with specified fields
 CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY,  -- No DEFAULT here, will be handled in INSERT statement
+    id UUID DEFAULT RANDOM_UUID() PRIMARY KEY, -- Auto-generate UUID
     username VARCHAR(255),
     email VARCHAR(255) UNIQUE,
     password_hash VARCHAR(255),
