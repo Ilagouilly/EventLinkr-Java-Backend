@@ -2,48 +2,45 @@ name: EventLinkr CI/CD
 
 on:
   push:
-    branches: [ main, infra, dev ]
+    branches: [main, infra, dev]
     paths:
-      - 'user-service/**'
-      - '.github/workflows/user-service-ci.yml'
+      - "user-service/**"
+      - ".github/workflows/user-service-ci.yml"
   pull_request:
-    branches: [ main, infra, dev ]
+    branches: [main, infra, dev]
     paths:
-      - 'user-service/**'
-      - '.github/workflows/user-service-ci.yml'
+      - "user-service/**"
+      - ".github/workflows/user-service-ci.yml"
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up JDK 23
-      uses: actions/setup-java@v4
-      with:
-        java-version: '23'
-        distribution: 'temurin'
-        cache: 'maven'
-    
-    - name: Install Root POM
-      run: mvn clean install -DskipTests
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "maven"
 
-    - name: Build and Test User Service with Coverage
-      run: |
-        cd user-service
-        mvn clean verify jacoco:report
-    
-    - name: Run Mutation Tests
-      run: |
-        cd user-service
-        mvn org.pitest:pitest-maven:mutationCoverage
-   
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        slug: Ilagouilly/EventLinkr-Java-Backend
+      - name: Install Root POM
+        run: mvn clean install -DskipTests
 
-        slug: Ilagouilly/EventLinkr-Java-Backend
+      - name: Build and Test User Service with Coverage
+        run: |
+          cd user-service
+          mvn clean verify jacoco:report
 
+      - name: Run Mutation Tests
+        run: |
+          cd user-service
+          mvn org.pitest:pitest-maven:mutationCoverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Ilagouilly/EventLinkr-Java-Backend
