@@ -14,6 +14,12 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     guest_expiration TIMESTAMP,
+    avatar_url VARCHAR(255),
+    bio TEXT,
+    email_verified BOOLEAN DEFAULT FALSE,
+    last_login_at TIMESTAMP,
+    login_attempts INTEGER DEFAULT 0,
+    last_failed_login TIMESTAMP,
     UNIQUE(provider, provider_id)
 );
 

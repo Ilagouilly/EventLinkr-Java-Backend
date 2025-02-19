@@ -62,3 +62,4 @@ Thumbs.db
 
 # Secrets
 secrets.yml
+user-service/.jqwik-database

@@ -1,9 +1,9 @@
 package com.eventlinkr.userservice.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 @Configuration
