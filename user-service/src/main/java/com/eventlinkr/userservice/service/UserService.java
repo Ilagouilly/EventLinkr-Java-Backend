@@ -91,11 +91,33 @@ public class UserService {
      * Searches users with pagination.
      */
     public Mono<PageImpl<User>> searchUsers(String query, Pageable pageable) {
+        // Validate pageable parameter
+        if (pageable == null) {
+            return Mono.error(new IllegalArgumentException("Pageable parameter cannot be null"));
+        }
+
+        // Validate page size
+        if (pageable.getPageSize() <= 0) {
+            return Mono.error(new IllegalArgumentException("Page size must be greater than 0"));
+        }
+
+        // Validate page number
+        if (pageable.getPageNumber() < 0) {
+            return Mono.error(new IllegalArgumentException("Page number cannot be negative"));
+        }
+
+        // Sanitize and validate query parameter
+        String sanitizedQuery = query != null ? query.trim() : "";
+
         Flux<User> searchResults;
-        if (query == null || query.trim().isEmpty()) {
+        if (sanitizedQuery.isEmpty()) {
             searchResults = userRepository.findAll();
         } else {
-            searchResults = userRepository.searchUsers(query, pageable);
+            // Additional validation could be added here for query content
+            if (sanitizedQuery.length() > 255) { // Example max length
+                return Mono.error(new IllegalArgumentException("Search query exceeds maximum length"));
+            }
+            searchResults = userRepository.searchUsers(sanitizedQuery, pageable);
         }
 
         return searchResults.collectList()
