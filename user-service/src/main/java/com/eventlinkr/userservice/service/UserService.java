@@ -11,6 +11,7 @@ import com.eventlinkr.userservice.domain.dto.CreateUserRequest;
 import com.eventlinkr.userservice.domain.dto.UserProfileUpdateRequest;
 import com.eventlinkr.userservice.domain.model.User;
 import com.eventlinkr.userservice.repository.UserRepository;
+import com.eventlinkr.userservice.utils.LoggingFormat;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    private static final int MAX_QUERY_LENGTH = 255;
     private final UserRepository userRepository;
 
     /**
@@ -36,8 +39,8 @@ public class UserService {
             user.setUpdatedAt(Instant.now());
             user.setStatus(User.UserStatus.PENDING_VERIFICATION);
             return userRepository.save(user);
-        }).doOnSuccess(savedUser -> log.info("Created new user with ID: {}", savedUser.getId()))
-                .doOnError(error -> log.error("Error creating user: {}", error.getMessage()));
+        }).doOnSuccess(savedUser -> log.info(LoggingFormat.INFO_CREATED, "user", savedUser.getId()))
+                .doOnError(error -> log.error(LoggingFormat.ERROR_OPERATION, "creating user", error.getMessage()));
     }
 
     /**
@@ -50,8 +53,9 @@ public class UserService {
                 .createdAt(Instant.now()).updatedAt(Instant.now()).build();
 
         return userRepository.save(user)
-                .doOnSuccess(savedUser -> log.info("Created user from request with ID: {}", savedUser.getId()))
-                .doOnError(error -> log.error("Error creating user from request: {}", error.getMessage()));
+                .doOnSuccess(savedUser -> log.info(LoggingFormat.INFO_CREATED, "user", savedUser.getId()))
+                .doOnError(error -> log.error(LoggingFormat.ERROR_OPERATION, "creating user from request",
+                        error.getMessage()));
     }
 
     /**
@@ -59,8 +63,8 @@ public class UserService {
      */
     public Mono<User> getUserById(String id) {
         return userRepository.findById(UUID.fromString(id))
-                .doOnSuccess(user -> log.debug("Retrieved user with ID: {}", id))
-                .doOnError(error -> log.error("Error retrieving user by ID: {}", error.getMessage()));
+                .doOnSuccess(user -> log.info(LoggingFormat.INFO_RETRIEVED, "user", id))
+                .doOnError(error -> log.error(LoggingFormat.ERROR_WITH_ID, "retrieving user", id, error.getMessage()));
     }
 
     /**
@@ -74,8 +78,8 @@ public class UserService {
             existingUser.setAvatarUrl(updateRequest.getAvatarUrl());
             existingUser.setUpdatedAt(Instant.now());
             return userRepository.save(existingUser);
-        }).doOnSuccess(user -> log.info("Updated profile for user ID: {}", id))
-                .doOnError(error -> log.error("Error updating user profile: {}", error.getMessage()));
+        }).doOnSuccess(user -> log.info(LoggingFormat.INFO_UPDATED, "user profile", id)).doOnError(
+                error -> log.error(LoggingFormat.ERROR_WITH_ID, "updating user profile", id, error.getMessage()));
     }
 
     /**
@@ -83,50 +87,28 @@ public class UserService {
      */
     public Mono<Void> deleteUser(String id) {
         return userRepository.deleteById(UUID.fromString(id))
-                .doOnSuccess(void_ -> log.info("Deleted user with ID: {}", id))
-                .doOnError(error -> log.error("Error deleting user: {}", error.getMessage()));
+                .doOnSuccess(void_ -> log.info(LoggingFormat.INFO_DELETED, "user", id))
+                .doOnError(error -> log.error(LoggingFormat.ERROR_WITH_ID, "deleting user", id, error.getMessage()));
     }
 
     /**
      * Searches users with pagination.
      */
     public Mono<PageImpl<User>> searchUsers(String query, Pageable pageable) {
-        // Validate pageable parameter
-        if (pageable == null) {
-            return Mono.error(new IllegalArgumentException("Pageable parameter cannot be null"));
-        }
+        validateSearchParameters(query, pageable);
 
-        // Validate page size
-        if (pageable.getPageSize() <= 0) {
-            return Mono.error(new IllegalArgumentException("Page size must be greater than 0"));
-        }
-
-        // Validate page number
-        if (pageable.getPageNumber() < 0) {
-            return Mono.error(new IllegalArgumentException("Page number cannot be negative"));
-        }
-
-        // Sanitize and validate query parameter
         String sanitizedQuery = query != null ? query.trim() : "";
 
-        Flux<User> searchResults;
-        if (sanitizedQuery.isEmpty()) {
-            searchResults = userRepository.findAll();
-        } else {
-            // Additional validation could be added here for query content
-            if (sanitizedQuery.length() > 255) { // Example max length
-                return Mono.error(new IllegalArgumentException("Search query exceeds maximum length"));
-            }
-            searchResults = userRepository.searchUsers(sanitizedQuery, pageable);
-        }
+        Flux<User> searchResults = sanitizedQuery.isEmpty() ? userRepository.findAll()
+                : userRepository.searchUsers(sanitizedQuery, pageable);
 
         return searchResults.collectList()
                 .map(users -> new PageImpl<>(
                         users.subList((int) pageable.getOffset(),
                                 Math.min((int) pageable.getOffset() + pageable.getPageSize(), users.size())),
                         pageable, users.size()))
-                .doOnSuccess(page -> log.debug("Completed user search with {} results", page.getTotalElements()))
-                .doOnError(error -> log.error("Error searching users: {}", error.getMessage()));
+                .doOnSuccess(page -> log.debug(LoggingFormat.DEBUG_FOUND, page.getTotalElements(), "user search"))
+                .doOnError(error -> log.error(LoggingFormat.ERROR_OPERATION, "searching users", error.getMessage()));
     }
 
     /**
@@ -134,8 +116,11 @@ public class UserService {
      */
     public Mono<User> getUserByProviderAndProviderId(String provider, String providerId) {
         return userRepository.findByProviderAndProviderId(provider, providerId)
-                .doOnSuccess(user -> log.debug("Found user with provider: {} and providerId: {}", provider, providerId))
-                .doOnError(error -> log.error("Error finding user by provider details: {}", error.getMessage()));
+                .doOnSuccess(user -> log.debug(LoggingFormat.DEBUG_FOUND, "user",
+                        String.format("provider: %s, providerId: %s", provider, providerId)))
+                .doOnError(error -> log.error(LoggingFormat.ERROR_OPERATION,
+                        String.format("finding user by provider: %s and providerId: %s", provider, providerId),
+                        error.getMessage()));
     }
 
     /**
@@ -143,7 +128,8 @@ public class UserService {
      */
     public Mono<Boolean> isEmailAvailable(String email) {
         return userRepository.existsByEmail(email).map(exists -> !exists)
-                .doOnSuccess(available -> log.debug("Email {} availability checked: {}", email, available));
+                .doOnSuccess(available -> log.debug(LoggingFormat.DEBUG_PROCESSING,
+                        String.format("email availability check for %s: %s", email, available), ""));
     }
 
     /**
@@ -151,6 +137,22 @@ public class UserService {
      */
     public Mono<Boolean> isUsernameAvailable(String username) {
         return userRepository.existsByUsername(username).map(exists -> !exists)
-                .doOnSuccess(available -> log.debug("Username {} availability checked: {}", username, available));
+                .doOnSuccess(available -> log.debug(LoggingFormat.DEBUG_PROCESSING,
+                        String.format("username availability check for %s: %s", username, available), ""));
+    }
+
+    private void validateSearchParameters(String query, Pageable pageable) {
+        if (pageable == null) {
+            throw new IllegalArgumentException("Pageable parameter cannot be null");
+        }
+        if (pageable.getPageSize() <= 0) {
+            throw new IllegalArgumentException("Page size must be greater than 0");
+        }
+        if (pageable.getPageNumber() < 0) {
+            throw new IllegalArgumentException("Page number cannot be negative");
+        }
+        if (query != null && query.trim().length() > MAX_QUERY_LENGTH) {
+            throw new IllegalArgumentException("Search query exceeds maximum length");
+        }
     }
 }
