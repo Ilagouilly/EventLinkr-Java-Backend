@@ -141,6 +141,9 @@ public class UserService {
                         String.format("username availability check for %s: %s", username, available), ""));
     }
 
+    /**
+     * Validates search parameters for user queries.
+     */
     private void validateSearchParameters(String query, Pageable pageable) {
         if (pageable == null) {
             throw new IllegalArgumentException("Pageable parameter cannot be null");
