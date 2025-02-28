@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class UserActionAuditAspect {
-    private static final Logger auditLogger = LoggerFactory.getLogger("AUDIT_LOGGER");
+    private static final Logger AUDIT_LOGGER = LoggerFactory.getLogger("AUDIT_LOGGER");
 
     @Before("execution(* com.eventlinkr.userservice.service.UserService.*(..))")
     public void logUserAction(JoinPoint joinPoint) {
@@ -18,9 +18,6 @@ public class UserActionAuditAspect {
         Object[] args = joinPoint.getArgs();
 
         // Basic audit logging with method name and arguments
-        auditLogger.info("User Action: Method={}, Arguments={}", 
-            methodName, 
-            args.length > 0 ? args[0] : "No arguments"
-        );
+        AUDIT_LOGGER.info("User Action: Method={}, Arguments={}", methodName, args.length > 0 ? args[0] : "No arguments");
     }
 }
