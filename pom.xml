@@ -29,6 +29,9 @@
         <r2dbc.version>1.0.1.RELEASE</r2dbc.version>
         <flyway.version>9.22.3</flyway.version>
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.projectKey>eventlinkr</sonar.projectKey>
+        <sonar.projectName>EventLinkr</sonar.projectName>
     </properties>
 
     <modules>
@@ -196,6 +199,11 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.9.1.2184</version>
                 </plugin>
             </plugins>
         </pluginManagement>

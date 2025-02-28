@@ -49,23 +49,19 @@ public class UserService {
      * Creates a user from a CreateUserRequest.
      */
     public Mono<User> createUserFromRequest(CreateUserRequest createUserRequest) {
-        User user = User.builder().id(null).username(createUserRequest.getUsername())
-                .email(createUserRequest.getEmail()).provider(createUserRequest.getProvider())
-                .providerId(createUserRequest.getProviderId()).status(User.UserStatus.PENDING_VERIFICATION)
+        User user = User.builder().id(null).username(createUserRequest.getUsername()).email(createUserRequest.getEmail())
+                .provider(createUserRequest.getProvider()).providerId(createUserRequest.getProviderId()).status(User.UserStatus.PENDING_VERIFICATION)
                 .createdAt(Instant.now()).updatedAt(Instant.now()).build();
 
-        return userRepository.save(user)
-                .doOnSuccess(savedUser -> log.info(LoggingFormat.INFO_CREATED, "user", savedUser.getId()))
-                .doOnError(error -> log.error(LoggingFormat.ERROR_OPERATION, "creating user from request",
-                        error.getMessage()));
+        return userRepository.save(user).doOnSuccess(savedUser -> log.info(LoggingFormat.INFO_CREATED, "user", savedUser.getId()))
+                .doOnError(error -> log.error(LoggingFormat.ERROR_OPERATION, "creating user from request", error.getMessage()));
     }
 
     /**
      * Gets a user by their ID.
      */
     public Mono<User> getUserById(String id) {
-        return userRepository.findById(UUID.fromString(id))
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User", id)))
+        return userRepository.findById(UUID.fromString(id)).switchIfEmpty(Mono.error(new ResourceNotFoundException("User", id)))
                 .doOnSuccess(user -> log.info(LoggingFormat.INFO_RETRIEVED, "user", id))
                 .doOnError(error -> log.error(LoggingFormat.ERROR_WITH_ID, "retrieving user", id, error.getMessage()));
     }
@@ -74,28 +70,25 @@ public class UserService {
      * Updates a user's profile using UserProfileUpdateRequest.
      */
     public Mono<User> updateUserProfile(String id, UserProfileUpdateRequest updateRequest) {
-        return userRepository.findById(UUID.fromString(id))
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User", id))).flatMap(existingUser -> {
-                    existingUser.setUsername(updateRequest.getUsername());
-                    existingUser.setFullName(updateRequest.getDisplayName());
-                    existingUser.setBio(updateRequest.getBio());
-                    existingUser.setAvatarUrl(updateRequest.getAvatarUrl());
-                    existingUser.setUpdatedAt(Instant.now());
-                    return userRepository.save(existingUser);
-                }).doOnSuccess(user -> log.info(LoggingFormat.INFO_UPDATED, "user profile", id)).doOnError(error -> log
-                        .error(LoggingFormat.ERROR_WITH_ID, "updating user profile", id, error.getMessage()));
+        return userRepository.findById(UUID.fromString(id)).switchIfEmpty(Mono.error(new ResourceNotFoundException("User", id))).flatMap(existingUser -> {
+            existingUser.setUsername(updateRequest.getUsername());
+            existingUser.setFullName(updateRequest.getDisplayName());
+            existingUser.setBio(updateRequest.getBio());
+            existingUser.setAvatarUrl(updateRequest.getAvatarUrl());
+            existingUser.setUpdatedAt(Instant.now());
+            return userRepository.save(existingUser);
+        }).doOnSuccess(user -> log.info(LoggingFormat.INFO_UPDATED, "user profile", id))
+                .doOnError(error -> log.error(LoggingFormat.ERROR_WITH_ID, "updating user profile", id, error.getMessage()));
     }
 
     /**
      * Deletes a user by their ID.
      */
     public Mono<Void> deleteUser(String id) {
-        return userRepository.existsById(UUID.fromString(id)).flatMap(exists -> {
-            if (!exists) {
-                return Mono.error(new ResourceNotFoundException("User", id));
-            }
-            return userRepository.deleteById(UUID.fromString(id));
-        }).doOnSuccess(void_ -> log.info(LoggingFormat.INFO_DELETED, "user", id))
+        UUID userId = UUID.fromString(id); // Avoid redundant parsing
+        return userRepository.existsById(userId).flatMap(exists -> exists.booleanValue() // Explicit primitive usage
+                ? userRepository.deleteById(userId)
+                : Mono.error(new ResourceNotFoundException("User", id))).doOnSuccess(ignored -> log.info(LoggingFormat.INFO_DELETED, "user", id))
                 .doOnError(error -> log.error(LoggingFormat.ERROR_WITH_ID, "deleting user", id, error.getMessage()));
     }
 
@@ -111,14 +104,12 @@ public class UserService {
 
         String sanitizedQuery = query != null ? query.trim() : "";
 
-        Flux<User> searchResults = sanitizedQuery.isEmpty() ? userRepository.findAll()
-                : userRepository.searchUsers(sanitizedQuery, pageable);
+        Flux<User> searchResults = sanitizedQuery.isEmpty() ? userRepository.findAll() : userRepository.searchUsers(sanitizedQuery, pageable);
 
         return searchResults.collectList()
                 .map(users -> new PageImpl<>(
-                        users.subList((int) pageable.getOffset(),
-                                Math.min((int) pageable.getOffset() + pageable.getPageSize(), users.size())),
-                        pageable, users.size()))
+                        users.subList((int) pageable.getOffset(), Math.min((int) pageable.getOffset() + pageable.getPageSize(), users.size())), pageable,
+                        users.size()))
                 .doOnSuccess(page -> log.debug(LoggingFormat.DEBUG_FOUND, page.getTotalElements(), "user search"))
                 .doOnError(error -> log.error(LoggingFormat.ERROR_OPERATION, "searching users", error.getMessage()));
     }
@@ -128,31 +119,26 @@ public class UserService {
      */
     public Mono<User> getUserByProviderAndProviderId(String provider, String providerId) {
         return userRepository.findByProviderAndProviderId(provider, providerId)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException(
-                        String.format("User with provider %s and providerId %s", provider, providerId))))
-                .doOnSuccess(user -> log.debug(LoggingFormat.DEBUG_FOUND, "user",
-                        String.format("provider: %s, providerId: %s", provider, providerId)))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException(String.format("User with provider %s and providerId %s", provider, providerId))))
+                .doOnSuccess(user -> log.debug(LoggingFormat.DEBUG_FOUND, "user", String.format("provider: %s, providerId: %s", provider, providerId)))
                 .doOnError(error -> log.error(LoggingFormat.ERROR_OPERATION,
-                        String.format("finding user by provider: %s and providerId: %s", provider, providerId),
-                        error.getMessage()));
+                        String.format("finding user by provider: %s and providerId: %s", provider, providerId), error.getMessage()));
     }
 
     /**
      * Validates if an email is available.
      */
     public Mono<Boolean> isEmailAvailable(String email) {
-        return userRepository.existsByEmail(email).map(exists -> !exists)
-                .doOnSuccess(available -> log.debug(LoggingFormat.DEBUG_PROCESSING,
-                        String.format("email availability check for %s: %s", email, available), ""));
+        return userRepository.existsByEmail(email).map(exists -> !exists).doOnSuccess(
+                available -> log.debug(LoggingFormat.DEBUG_PROCESSING, String.format("email availability check for %s: %s", email, available), ""));
     }
 
     /**
      * Validates if a username is available.
      */
     public Mono<Boolean> isUsernameAvailable(String username) {
-        return userRepository.existsByUsername(username).map(exists -> !exists)
-                .doOnSuccess(available -> log.debug(LoggingFormat.DEBUG_PROCESSING,
-                        String.format("username availability check for %s: %s", username, available), ""));
+        return userRepository.existsByUsername(username).map(exists -> !exists).doOnSuccess(
+                available -> log.debug(LoggingFormat.DEBUG_PROCESSING, String.format("username availability check for %s: %s", username, available), ""));
     }
 
     /**
