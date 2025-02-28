@@ -46,7 +46,11 @@ jobs:
           slug: Ilagouilly/EventLinkr-Java-Backend
 
       - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
+        run: |
+          cd user-service
+          mvn sonar:sonar -Dsonar.projectKey=Ilagouilly_EventLinkr-Java-Backend \
+                          -Dsonar.organization=ilagouilly \
+                          -Dsonar.host.url=https://sonarcloud.io \
+                          -Dsonar.login=$SONAR_TOKEN
