@@ -16,7 +16,7 @@
 
     <properties>
         <!-- Use parent's dependency management for Spring Boot versions -->
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
         <java.version>21</java.version>
         <start-class>com.eventlinkr.userservice.UserServiceApplication</start-class>
