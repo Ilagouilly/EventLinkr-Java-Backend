@@ -7,7 +7,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.0</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <groupId>com.eventlinkr</groupId>
@@ -23,7 +23,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot.version>3.4.0</spring-boot.version>
+        <spring-boot.version>3.4.2</spring-boot.version>
         <testcontainers.version>1.19.3</testcontainers.version>
         <netty.version>4.1.115.Final</netty.version>
         <r2dbc.version>1.0.1.RELEASE</r2dbc.version>
